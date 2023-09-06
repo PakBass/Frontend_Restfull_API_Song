@@ -144,7 +144,7 @@ function Home() {
                         <th scope="col">Cover</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Judul Lagu</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Aksi</th>
 
                       </tr>
                     </thead>
@@ -154,7 +154,7 @@ function Home() {
                         <tr key={song.id}>
                           <td>
                           <img 
-                              src={`http://localhost:3000/storage/public/${song.image}`} 
+                              src={`http://localhost:3000/storage/${song.image}`} 
                               style={{ width: "100px", height: "50px" }}
                               className='rounded' />
                           </td>
