@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import ReactPaginate from 'react-paginate';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Table, Pagination } from 'react-bootstrap';
 
 function Home() {
   const [user, setUser] = useState({});
@@ -69,6 +72,18 @@ function Home() {
     });
   };
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5; // Sesuaikan jumlah item per halaman sesuai keinginan Anda
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage);
+  };
+  
+  const offset = currentPage * itemsPerPage;
+  const currentPageItems = songs.slice(offset, offset + itemsPerPage);
+
+
+
   return (
     <div>
       {/* Navbar */}
@@ -120,10 +135,8 @@ function Home() {
                 <h6>User login: {user.name}</h6>
                 <h6>User email: {user.email}</h6>
                 <p>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Reprehenderit quod, asperiores, pariatur in sunt ullam laudantium
-                  facere natus deserunt voluptatibus, assumenda error atque fuga
-                  veritatis?
+                  Aplikasi ini dikembangkan dengan 2 bagian yang berbeda,
+                  Backend yang yang dibuat Restfull-API dan frontend menggunakana React.js.
                 </p>
                 <button onClick={logoutHandler} className="btn btn-danger">
                   Logout
@@ -137,8 +150,9 @@ function Home() {
                 <strong>Data lagu</strong>
               </div>
                 <div className="card-body">
+                  <a href="/TambahData" className="btn btn-primary ms-auto">+ Tambah daata lagu</a>
                 <div className="mt-4">
-                  <table className="table">
+                <Table striped bordered hover>
                     <thead>
                       <tr>
                         <th scope="col">Cover</th>
@@ -154,8 +168,8 @@ function Home() {
                         <tr key={song.id}>
                           <td>
                           <img 
-                              src={`http://localhost:3000/storage/${song.image}`} 
-                              style={{ width: "100px", height: "50px" }}
+                              src={`http://localhost:8000/${song.image}`}
+                              style={{ width: "120px", height: "70px" }}
                               className='rounded' />
                           </td>
                           <td style={{ verticalAlign: "middle" }}>{song.nama}</td>
@@ -169,7 +183,22 @@ function Home() {
                       </tr>
                     )}
                   </tbody>
-                </table>
+                </Table>
+                <Pagination>
+                  <Pagination.First onClick={() => handlePageChange(0)} />
+                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
+                  {Array.from({ length: Math.ceil(songs.length / itemsPerPage) }, (_, i) => (
+                    <Pagination.Item 
+                      key={i} 
+                      active={i === currentPage}
+                      onClick={() => handlePageChange(i)}
+                    >
+                      {i + 1}
+                    </Pagination.Item>
+                  ))}
+                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
+                  <Pagination.Last onClick={() => handlePageChange(Math.ceil(songs.length / itemsPerPage) - 1)} />
+                </Pagination>
                 </div>
               </div>
             </div>
