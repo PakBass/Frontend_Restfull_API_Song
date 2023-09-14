@@ -5,17 +5,22 @@ import Swal from "sweetalert2";
 import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Pagination } from 'react-bootstrap';
+import 'font-awesome/css/font-awesome.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Home() {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [songs, setSongs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0); // Menentukan halaman saat ini
+  const itemsPerPage = 5; // Jumlah item per halaman
+  const pageCount = Math.ceil(songs.length / itemsPerPage); 
 
   const fetchSongs = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/songs');
-      // console.log(response.data);
+      console.log(response.data.data.data);
       setSongs(response.data.data.data);
     } catch (error) {
       console.error('Terjadi kesalahan saat mengambil data lagu:', error);
@@ -72,17 +77,46 @@ function Home() {
     });
   };
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 5; // Sesuaikan jumlah item per halaman sesuai keinginan Anda
+  function handleEditClick(id) {
+    const dataToSend = {
+      image: 'url_gambar',
+      nama: 'Nama Pengguna',
+      judul_lagu: 'Judul Lagu'
+    };
+    // Mengirim permintaan ke API untuk mengedit data dengan ID tertentu
+    fetch(`http://localhost:8000/api/songs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
 
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage);
+      }),
+      // ... tambahkan konfigurasi permintaan seperti headers, body, dll.
+    })
+    .then(response => response.json())
+    .then(data => {
+      navigate("/home");
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  function handleDeleteClick(id) {
+    // Mengirim permintaan ke API untuk menghapus data dengan ID tertentu
+    fetch(`http://localhost:8000/api/songs/${id}`, {
+      method: 'DELETE',
+      // ... tambahkan konfigurasi permintaan seperti headers, body, dll.
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Lakukan apa pun setelah berhasil menghapus data
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  const handlePageClick = (selected) => {
+    setCurrentPage(selected);
   };
-  
-  const offset = currentPage * itemsPerPage;
-  const currentPageItems = songs.slice(offset, offset + itemsPerPage);
-
-
+  const indexOfLastSong = (currentPage + 1) * itemsPerPage;
+  const indexOfFirstSong = indexOfLastSong - itemsPerPage;
+  const currentSongs = songs.slice(indexOfFirstSong, indexOfLastSong);
 
   return (
     <div>
@@ -154,50 +188,71 @@ function Home() {
                 <div className="mt-4">
                 <Table striped bordered hover>
                     <thead>
-                      <tr>
+                      <tr style={{ textAlign: "center" }}>
                         <th scope="col">Cover</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Judul Lagu</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col" colSpan={3}>Aksi</th>
 
                       </tr>
                     </thead>
                     <tbody>
-                    {Array.isArray(songs) && songs.length > 0 ? (
-                      songs.map((song) => (
+                    {Array.isArray(currentSongs) && currentSongs.length > 0 ? (
+                      currentSongs.map((song) => (
                         <tr key={song.id}>
-                          <td>
+                          <td style={{ verticalAlign: "middle", textAlign: "center" }}>
                           <img 
-                              src={`http://localhost:8000/${song.image}`}
+                              src={`${song.image}`}
                               style={{ width: "120px", height: "70px" }}
+                              // alt={song.image}
                               className='rounded' />
                           </td>
                           <td style={{ verticalAlign: "middle" }}>{song.nama}</td>
                           <td style={{ verticalAlign: "middle" }}>{song.judul_lagu}</td>
-                          <td></td>
+                          <td style={{ verticalAlign: "middle", textAlign:"center" }}>
+                          <i 
+                            className="bi bi-file-earmark-music"
+                            // onClick={handleViewClick}
+                            style={{ cursor: "pointer", color: "black", marginRight: "10px"  }}
+                            ></i>
+                          <i 
+                            className="bi bi-pencil-square" 
+                            onClick={handleEditClick} 
+                            style={{ cursor: "pointer",color:"blue", marginRight: "10px" }}
+                          ></i>
+                          <i 
+                          className="bi bi-trash3"
+                          onClick={handleDeleteClick} 
+                          style={{ cursor: "pointer",color:"red", marginRight: "10px" }}
+                          ></i>
+                          </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="3" className="text-center">Tidak ada lagu yang ditemukan.</td>
+                        <td colSpan="4" className="text-center">Tidak ada data lagu..</td>
                       </tr>
                     )}
                   </tbody>
                 </Table>
-                <Pagination>
-                  <Pagination.First onClick={() => handlePageChange(0)} />
-                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
-                  {Array.from({ length: Math.ceil(songs.length / itemsPerPage) }, (_, i) => (
+                <Pagination className="mt-4 justify-content-center">
+                  <Pagination.Prev 
+                    onClick={() => handlePageClick(currentPage - 1)} 
+                    disabled={currentPage === 0}
+                  />
+                  {Array.from({length: pageCount}, (_, index) => (
                     <Pagination.Item 
-                      key={i} 
-                      active={i === currentPage}
-                      onClick={() => handlePageChange(i)}
+                      key={index} 
+                      active={index === currentPage}
+                      onClick={() => handlePageClick(index)}
                     >
-                      {i + 1}
+                      {index + 1}
                     </Pagination.Item>
                   ))}
-                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
-                  <Pagination.Last onClick={() => handlePageChange(Math.ceil(songs.length / itemsPerPage) - 1)} />
+                  <Pagination.Next 
+                    onClick={() => handlePageClick(currentPage + 1)} 
+                    disabled={currentPage === pageCount - 1}
+                  />
                 </Pagination>
                 </div>
               </div>

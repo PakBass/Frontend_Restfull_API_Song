@@ -187,7 +187,7 @@ function TambahData() {
               </div>
               <div className="card-body">
                 {/* Tambah data lagu form */}
-                    <form onSubmit={handleSubmitTambahLagu} name="myForm" className="mt-4">
+                    <form onSubmit={handleSubmitTambahLagu} className="mt-4">
                         <div className="mb-3">
                             <label htmlFor="nama">Nama:</label>
                             <input
