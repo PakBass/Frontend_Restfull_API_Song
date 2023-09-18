@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Pagination } from 'react-bootstrap';
 import 'font-awesome/css/font-awesome.min.css';
@@ -15,7 +15,6 @@ function Home() {
   const [songs, setSongs] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // Menentukan halaman saat ini
   const itemsPerPage = 5; // Jumlah item per halaman
-  const pageCount = Math.ceil(songs.length / itemsPerPage); 
 
   const fetchSongs = async () => {
     try {
@@ -77,43 +76,44 @@ function Home() {
     });
   };
 
-  function handleEditClick(id) {
-    const dataToSend = {
-      image: 'url_gambar',
-      nama: 'Nama Pengguna',
-      judul_lagu: 'Judul Lagu'
-    };
-    // Mengirim permintaan ke API untuk mengedit data dengan ID tertentu
-    fetch(`http://localhost:8000/api/songs/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-
-      }),
-      // ... tambahkan konfigurasi permintaan seperti headers, body, dll.
-    })
-    .then(response => response.json())
-    .then(data => {
-      navigate("/home");
-    })
-    .catch(error => console.error('Error:', error));
-  }
-
-  function handleDeleteClick(id) {
-    // Mengirim permintaan ke API untuk menghapus data dengan ID tertentu
-    fetch(`http://localhost:8000/api/songs/${id}`, {
-      method: 'DELETE',
-      // ... tambahkan konfigurasi permintaan seperti headers, body, dll.
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Lakukan apa pun setelah berhasil menghapus data
-    })
-    .catch(error => console.error('Error:', error));
-  }
+  const handleDeleteClick = async (id) => {
+    // Tampilkan SweetAlert konfirmasi
+    Swal.fire({
+      title: "Apakah Anda yakin ingin menghapus data?",
+      text: "Anda tidak akan dapat mengembalikan data ini!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`http://127.0.0.1:8000/api/songs/${id}`);
+          console.log('Data berhasil dihapus', response.data);
+          Swal.fire(
+            "Berhasil!",
+            "Data telah dihapus.",
+            "success"
+          ).then(() => {
+            window.location.reload(); // Auto-refresh halaman setelah SweetAlert tertutup
+          });
+        } catch (error) {
+          console.error('Terjadi kesalahan saat menghapus data lagu:', error);
+          Swal.fire(
+            "Gagal!",
+            "Terjadi kesalahan saat menghapus data.",
+            "error"
+          );
+        }
+      }
+    });
+  };
 
   const handlePageClick = (selected) => {
     setCurrentPage(selected);
   };
+  const pageCount = Math.ceil(songs.length / itemsPerPage); 
   const indexOfLastSong = (currentPage + 1) * itemsPerPage;
   const indexOfFirstSong = indexOfLastSong - itemsPerPage;
   const currentSongs = songs.slice(indexOfFirstSong, indexOfLastSong);
@@ -210,19 +210,22 @@ function Home() {
                           <td style={{ verticalAlign: "middle" }}>{song.nama}</td>
                           <td style={{ verticalAlign: "middle" }}>{song.judul_lagu}</td>
                           <td style={{ verticalAlign: "middle", textAlign:"center" }}>
-                          <i 
-                            className="bi bi-file-earmark-music"
-                            // onClick={handleViewClick}
-                            style={{ cursor: "pointer", color: "black", marginRight: "10px"  }}
+                          <Link to={`/detail/${song.id}`} style={{ textDecoration: 'none' }}>
+                            <i 
+                              className="bi bi-file-earmark-music"
+                              data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"
+                              style={{ cursor: "pointer", color: "black", marginRight: "10px" }}
                             ></i>
+                          </Link>
+                          <Link to={`/edit/${song.id}`} style={{ textDecoration: 'none' }}>
                           <i 
                             className="bi bi-pencil-square" 
-                            onClick={handleEditClick} 
                             style={{ cursor: "pointer",color:"blue", marginRight: "10px" }}
                           ></i>
+                          </Link>
                           <i 
                           className="bi bi-trash3"
-                          onClick={handleDeleteClick} 
+                          onClick={() => handleDeleteClick(song.id)} 
                           style={{ cursor: "pointer",color:"red", marginRight: "10px" }}
                           ></i>
                           </td>
@@ -236,24 +239,24 @@ function Home() {
                   </tbody>
                 </Table>
                 <Pagination className="mt-4 justify-content-center">
-                  <Pagination.Prev 
-                    onClick={() => handlePageClick(currentPage - 1)} 
-                    disabled={currentPage === 0}
-                  />
-                  {Array.from({length: pageCount}, (_, index) => (
-                    <Pagination.Item 
-                      key={index} 
-                      active={index === currentPage}
-                      onClick={() => handlePageClick(index)}
-                    >
-                      {index + 1}
-                    </Pagination.Item>
-                  ))}
-                  <Pagination.Next 
-                    onClick={() => handlePageClick(currentPage + 1)} 
-                    disabled={currentPage === pageCount - 1}
-                  />
-                </Pagination>
+                    <Pagination.Prev 
+                      onClick={() => handlePageClick(currentPage - 1)} 
+                      disabled={currentPage === 0}
+                    />
+                    {Array.from({length: pageCount}, (_, index) => (
+                      <Pagination.Item 
+                        key={index} 
+                        active={index === currentPage}
+                        onClick={() => handlePageClick(index)} // Menggunakan index sebagai parameter
+                      >
+                        {index + 1}
+                      </Pagination.Item>
+                    ))}
+                    <Pagination.Next 
+                      onClick={() => handlePageClick(currentPage + 1)} 
+                      disabled={currentPage === pageCount - 1}
+                    />
+                  </Pagination>
                 </div>
               </div>
             </div>

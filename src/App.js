@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import Welcome from "./pages/Welcome";
-import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
 import TambahData from "./pages/Tambah";
+import EditData from "./pages/Edit";
+import Register from "./pages/register";
+import Home from "./pages/home";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/tambahData" element={<TambahData/>} />
+        <Route path="/edit/:id" element={<EditData/>} />
       </Routes>
     </div>
   );

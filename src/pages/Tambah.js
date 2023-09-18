@@ -8,7 +8,6 @@ function TambahData() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [songs, setSongs] = useState([]);
-
   const [formTambahLagu, setFormTambahLagu] = useState({
     nama: "",
     judul_lagu: "",
@@ -117,7 +116,7 @@ function TambahData() {
   };
 
   const handleReset = async () => {
-    document.reset();
+    document.getElementById("formTambah").reset();
   }
 
   return (
@@ -183,13 +182,13 @@ function TambahData() {
           <div className="col-md-8">
             <div className="card border-0 shadow rounded">
               <div className="card-header">
-                <strong>Data lagu</strong>
+                <strong>TambahData lagu</strong>
               </div>
               <div className="card-body">
                 {/* Tambah data lagu form */}
-                    <form onSubmit={handleSubmitTambahLagu} className="mt-4">
+                    <form onSubmit={handleSubmitTambahLagu} id="formTambah" className="mt-4">
                         <div className="mb-3">
-                            <label htmlFor="nama">Nama:</label>
+                            <label htmlFor="nama">Nama</label>
                             <input
                             type="text"
                             className="form-control"
@@ -209,7 +208,7 @@ function TambahData() {
                             }
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="judulLagu">Judul Lagu:</label>
+                            <label htmlFor="judulLagu">Judul Lagu</label>
                             <input
                             type="text"
                             className="form-control"
@@ -228,7 +227,7 @@ function TambahData() {
                             }
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="image">Gambar:</label>
+                            <label htmlFor="image">Gambar</label>
                             <input
                             type="file"
                             className="form-control"
@@ -238,6 +237,15 @@ function TambahData() {
                             onChange={handleChangeTambahLagu}
                             />
                             {
+                              formTambahLagu.image && typeof formTambahLagu.image !== 'string' && (
+                                <img
+                                    src={URL.createObjectURL(formTambahLagu.image)}
+                                    alt="Selected Image"
+                                    style={{ maxWidth: '180px', marginTop: '10px' }}
+                                />
+                              )
+                            }
+                            {
                                 validation.image && (
                                     <small className="text-danger">
                                         { validation.image[0] }
@@ -246,7 +254,7 @@ function TambahData() {
                             }
                         </div>
                         <button type="submit" className="btn btn-primary">Simpan</button>
-                        <button type="reset" className="btn btn-secondary ms-2">Batal</button>
+                        <button type="reset" onClick={handleReset} className="btn btn-secondary ms-2">Batal</button>
                     </form>
                 </div>
             </div>
