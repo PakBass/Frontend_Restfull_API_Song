@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 // import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Pagination } from 'react-bootstrap';
+import { Table, Pagination, Modal, Button } from 'react-bootstrap';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
@@ -173,7 +173,7 @@ function Home() {
                   Backend yang yang dibuat Restfull-API dan frontend menggunakana React.js.
                 </p>
                 <button onClick={logoutHandler} className="btn btn-danger">
-                  Logout
+                <i className="bi bi-box-arrow-left"></i> Logout
                 </button>
               </div>
             </div>

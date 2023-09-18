@@ -174,7 +174,7 @@ function TambahData() {
                     Backend yang yang dibuat Restfull-API dan frontend menggunakana React.js.
                 </p>
                 <button onClick={logoutHandler} className="btn btn-danger">
-                  Logout
+                <i className="bi bi-box-arrow-left"></i> Logout
                 </button>
               </div>
             </div>
@@ -253,8 +253,8 @@ function TambahData() {
                                 )
                             }
                         </div>
-                        <button type="submit" className="btn btn-primary">Simpan</button>
-                        <button type="reset" onClick={handleReset} className="btn btn-secondary ms-2">Batal</button>
+                        <button type="submit" className="btn btn-primary"><i className="bi bi-floppy"></i> Simpan</button>
+                        <a href="/home" className="btn btn-danger ms-2"><i className="bi bi-house-door"></i> Back</a>
                     </form>
                 </div>
             </div>
