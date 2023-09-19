@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import InfoCard from "./SideBar";
 
 function TambahData() {
   const [user, setUser] = useState({});
@@ -161,23 +162,9 @@ function TambahData() {
       <div className="container mt-5">
         <div className="row">
           <div className="col-md-4">
-            <div className="card border-0 shadow rounded">
-              <div className="card-header">
-                <strong>Home</strong>
-              </div>
-              <div className="card-body">
-                <h5>Belajar Backend/Frontend with Laravel + React</h5>
-                <h6>User login: {user.name}</h6>
-                <h6>User email: {user.email}</h6>
-                <p>
-                    Aplikasi ini dikembangkan dengan 2 bagian yang berbeda,
-                    Backend yang yang dibuat Restfull-API dan frontend menggunakana React.js.
-                </p>
-                <button onClick={logoutHandler} className="btn btn-danger">
-                <i className="bi bi-box-arrow-left"></i> Logout
-                </button>
-              </div>
-            </div>
+          <div>
+            <InfoCard user={user} logoutHandler={logoutHandler} />
+          </div>
           </div>
           <div className="col-md-8">
             <div className="card border-0 shadow rounded">
@@ -254,7 +241,7 @@ function TambahData() {
                             }
                         </div>
                         <button type="submit" className="btn btn-primary"><i className="bi bi-floppy"></i> Simpan</button>
-                        <a href="/home" className="btn btn-danger ms-2"><i className="bi bi-house-door"></i> Back</a>
+                        <Link to="/home" className="btn btn-danger ms-2 text-center">Back</Link>
                     </form>
                 </div>
             </div>

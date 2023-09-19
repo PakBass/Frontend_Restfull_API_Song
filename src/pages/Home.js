@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Pagination, Modal, Button } from 'react-bootstrap';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import InfoCard from "./SideBar";
 
 function Home() {
   const [user, setUser] = useState({});
@@ -60,6 +61,9 @@ function Home() {
       showCancelButton: true,
       confirmButtonText: "Ya",
       cancelButtonText: "Batal",
+      customClass: {
+        confirmButton: 'btn btn-danger' // Tambahkan kelas 'btn-danger' untuk membuat tombol menjadi merah
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -85,7 +89,10 @@ function Home() {
       showCancelButton: true,
       confirmButtonText: "Ya, hapus!",
       cancelButtonText: "Batal",
-      reverseButtons: true
+      reverseButtons: true,
+      customClass: {
+        confirmButton: 'btn btn-danger' // Tambahkan kelas 'btn-danger' untuk membuat tombol menjadi merah
+      }
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -107,6 +114,21 @@ function Home() {
           );
         }
       }
+    });
+  };
+
+  const handleClick = (song) => {
+    Swal.fire({
+      title: `Detail Lagu: ${song.nama}`,
+      html: `
+        <p>Artis: ${song.judul_lagu}</p>
+        <p>Album: ${song.image}</p>
+      `,
+      icon: 'info',
+      showCloseButton: true,
+      showCancelButton: false,
+      focusConfirm: false,
+      confirmButtonText: 'OK',
     });
   };
 
@@ -160,23 +182,9 @@ function Home() {
       <div className="container mt-5">
         <div className="row">
           <div className="col-md-4">
-            <div className="card border-0 shadow rounded">
-              <div className="card-header">
-                <strong>Home</strong>
-              </div>
-              <div className="card-body">
-                <h5>Belajar Backend/Frontend with Laravel + React</h5>
-                <h6>User login: {user.name}</h6>
-                <h6>User email: {user.email}</h6>
-                <p>
-                  Aplikasi ini dikembangkan dengan 2 bagian yang berbeda,
-                  Backend yang yang dibuat Restfull-API dan frontend menggunakana React.js.
-                </p>
-                <button onClick={logoutHandler} className="btn btn-danger">
-                <i className="bi bi-box-arrow-left"></i> Logout
-                </button>
-              </div>
-            </div>
+          <div>
+            <InfoCard user={user} logoutHandler={logoutHandler} />
+          </div>
           </div>
           <div className="col-md-8">
             <div className="card border-0 shadow rounded">
@@ -210,13 +218,14 @@ function Home() {
                           <td style={{ verticalAlign: "middle" }}>{song.nama}</td>
                           <td style={{ verticalAlign: "middle" }}>{song.judul_lagu}</td>
                           <td style={{ verticalAlign: "middle", textAlign:"center" }}>
-                          <Link to={`/detail/${song.id}`} style={{ textDecoration: 'none' }}>
+                          {/* <Link to={`/detail/${song.id}`} style={{ textDecoration: 'none' }}>
                             <i 
                               className="bi bi-file-earmark-music"
                               data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"
                               style={{ cursor: "pointer", color: "black", marginRight: "10px" }}
+                              onClick={() => handleClick(song)}
                             ></i>
-                          </Link>
+                          </Link> */}
                           <Link to={`/edit/${song.id}`} style={{ textDecoration: 'none' }}>
                           <i 
                             className="bi bi-pencil-square" 
