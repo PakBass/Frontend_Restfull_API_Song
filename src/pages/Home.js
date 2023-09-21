@@ -4,10 +4,12 @@ import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 // import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Pagination, Modal, Button } from 'react-bootstrap';
+import { Table, Pagination, Modal, Button} from 'react-bootstrap';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import InfoCard from "./SideBar";
+import Navbar from "./Navbar";
+
 
 function Home() {
   const [user, setUser] = useState({});
@@ -150,41 +152,7 @@ function Home() {
   return (
     <div>
       {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
-          <a className="navbar-brand" href="#">
-            Restfull-API React
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation" >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="">
-                  Profile
-                </a>
-              </li>
-              <li className="nav-item">
-                {/* button logout */}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
+      <Navbar />
       {/* Content */}
       <div className="container mt-5">
         <div className="row">
@@ -199,7 +167,7 @@ function Home() {
                 <strong>Data lagu</strong>
               </div>
                 <div className="card-body">
-                  <a href="/TambahData" className="btn btn-primary ms-auto">+ Tambah daata lagu</a>
+                  <a href="/TambahData" className="btn btn-primary ms-auto"><i className="bi bi-plus-square"></i> Tambah daata lagu</a>
                 <div className="mt-4">
                 <Table striped bordered hover>
                     <thead>
@@ -229,20 +197,20 @@ function Home() {
                             <i 
                               className="bi bi-file-earmark-music"
                               data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"
-                              style={{ cursor: "pointer", color: "black", marginRight: "10px" }}
+                              style={{ cursor: "pointer", color: "black", marginRight: "10px", fontSize:"24px" }}
                               onClick={() => handleClick(song)}
                             ></i>
                           </Link>
                           <Link to={`/edit/${song.id}`} style={{ textDecoration: 'none' }}>
                           <i 
                             className="bi bi-pencil-square" 
-                            style={{ cursor: "pointer",color:"blue", marginRight: "10px" }}
+                            style={{ cursor: "pointer",color:"blue", marginRight: "10px", fontSize:"24px"  }}
                           ></i>
                           </Link>
                           <i 
                           className="bi bi-trash3"
                           onClick={() => handleDeleteClick(song.id)} 
-                          style={{ cursor: "pointer",color:"red", marginRight: "10px" }}
+                          style={{ cursor: "pointer",color:"red", marginRight: "10px", fontSize:"24px"  }}
                           ></i>
                           </td>
                         </tr>

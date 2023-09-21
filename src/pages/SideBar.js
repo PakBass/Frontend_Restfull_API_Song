@@ -4,7 +4,7 @@ const InfoCard = ({ user, logoutHandler }) => {
   return (
     <div className="card border-0 shadow rounded">
       <div className="card-header">
-        <strong>Home</strong>
+        <strong>Login sebagai: {user.role}</strong>
       </div>
       <div className="card-body">
         <h5>Belajar Backend/Frontend with Laravel + React</h5>

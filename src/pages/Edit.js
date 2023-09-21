@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import InfoCard from "./SideBar";
+import Navbar from "./Navbar";
 
 function EditData() {
   const [user, setUser] = useState({});
@@ -136,41 +137,7 @@ function EditData() {
   return (
     <div>
       {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
-          <a className="navbar-brand" href="#">
-            Restfull-API React
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation" >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link" href="/home">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="">
-                  Profile
-                </a>
-              </li>
-              <li className="nav-item">
-                {/* button logout */}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
+      <Navbar />
       {/* Content */}
       <div className="container mt-5">
         <div className="row">
