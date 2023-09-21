@@ -1,7 +1,13 @@
 import React, {useState} from "react";
+import { Button, NavDropdown } from 'react-bootstrap';
 
 const Navbar = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
@@ -21,15 +27,17 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className={`nav-link ${isLoggedIn ? 'active' : ''}`} href="/home" style={{ cursor: 'pointer' }}>
+                <a className= "nav-link" href="/home" style={{ cursor: 'pointer' }}>
                 <i className="bi bi-house-door"></i> Home
                 </a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link ${isLoggedIn ? 'active' : ''}`} href="/addUser" style={{ cursor: 'pointer' }}>
-                <i className="bi bi-person-plus-fill"></i> Add User
-                </a>
-              </li>
+                <NavDropdown title="Data" id="basic-nav-dropdown">
+                    <NavDropdown.Item href="/addUser" onClick={handleShow}>Tambah data user</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="#">Lihat data user</NavDropdown.Item>
+                </NavDropdown>
+            </li>
             </ul>
           </div>
         </div>

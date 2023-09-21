@@ -5,6 +5,7 @@ import TambahData from "./pages/Tambah";
 import EditData from "./pages/Edit";
 import Register from "./pages/register";
 import Home from "./pages/home";
+import AddUser from "./pages/AddUser";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/home" element={<Home/>} />
         <Route path="/tambahData" element={<TambahData/>} />
         <Route path="/edit/:id" element={<EditData/>} />
+        <Route path="/addUser" element={<AddUser/>} />
       </Routes>
     </div>
   );

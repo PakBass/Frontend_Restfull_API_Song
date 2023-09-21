@@ -199,7 +199,7 @@ function EditData() {
                       )}
                     </div>
                     <button type="submit" className="btn btn-primary"><i className="bi bi-floppy"></i> Simpan</button>
-                    <a href="/home" className="btn btn-danger ms-2"><i className="bi bi-house-door"></i> Back</a>
+                    <a href="/home" className="btn btn-danger ms-2"><i className="bi bi-arrow-left-square"></i> Back</a>
                 </form>
               </div>
             </div>

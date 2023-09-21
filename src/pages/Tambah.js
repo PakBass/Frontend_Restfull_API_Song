@@ -208,7 +208,7 @@ function TambahData() {
                             }
                         </div>
                         <button type="submit" className="btn btn-primary"><i className="bi bi-floppy"></i> Simpan</button>
-                        <Link to="/home" className="btn btn-danger ms-2 text-center">Back</Link>
+                        <Link to="/home" className="btn btn-danger ms-2 text-center"><i className="bi bi-arrow-left-square"></i> Back</Link>
                     </form>
                 </div>
             </div>
