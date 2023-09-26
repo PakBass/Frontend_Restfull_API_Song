@@ -124,7 +124,7 @@ function TambahData() {
   return (
     <div>
       {/* Navbar */}
-      <Navbar />
+      <Navbar peranPengguna="admin" />
       {/* Content */}
       <div className="container mt-5">
         <div className="row">

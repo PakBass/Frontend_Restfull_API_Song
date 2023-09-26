@@ -15,10 +15,28 @@ function TambahUser() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
   
+    const fetchData = async () => {
+      try {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        const response = await axios.post(
+          "http://localhost:8000/api/auth/user-profile"
+        );
+        setUser(response.data);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          console.error("Terjadi kesalahan:", error);
+        }
+      }
+    };
+
     useEffect(() => {
       if (localStorage.getItem("token")) {
         navigate("/addUser");
       }
+      fetchData(token);
     }, []);
   
     const handleSubmitTambahUser = async (e) => {
@@ -40,7 +58,7 @@ function TambahUser() {
               text: "Anda telah berhasil mendaftar!",
               icon: "success",
             }).then(() => {
-            navigate("/login");
+            navigate("/home");
           });
         })
         .catch((error) => {
@@ -75,7 +93,7 @@ function TambahUser() {
   return (
     <div>
       {/* Navbar */}
-      <Navbar />
+      <Navbar peranPengguna="admin" />
       {/* Content */}
       <div className="container mt-5">
         <div className="row">

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Button, NavDropdown } from 'react-bootstrap';
 
-const Navbar = () => {
+const Navbar = ({ peranPengguna })  => {
     const [showModal, setShowModal] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
 
@@ -32,11 +32,15 @@ const Navbar = () => {
                 </a>
               </li>
               <li className="nav-item">
+              {(peranPengguna === 'admin' || peranPengguna === 'operator') && (
                 <NavDropdown title="Data" id="basic-nav-dropdown">
-                    <NavDropdown.Item href="/addUser" onClick={handleShow}>Tambah data user</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#">Lihat data user</NavDropdown.Item>
+                  <NavDropdown.Item href="/addUser" onClick={handleShow}>
+                    Tambah data pengguna
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="#">Lihat data pengguna</NavDropdown.Item>
                 </NavDropdown>
+              )}
             </li>
             </ul>
           </div>

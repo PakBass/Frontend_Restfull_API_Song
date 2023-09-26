@@ -20,6 +20,7 @@ function EditData() {
 
   useEffect(() => {
     fetchSongs(id);
+    fetchData();
     fetchEditData(id); // Fetch data for edit
   }, [id]);
 

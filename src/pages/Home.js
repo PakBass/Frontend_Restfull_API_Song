@@ -9,6 +9,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import InfoCard from "./SideBar";
 import Navbar from "./Navbar";
+import DataTable from 'react-data-table-component';
 
 
 function Home() {
@@ -16,10 +17,13 @@ function Home() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [songs, setSongs] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0); // Menentukan halaman saat ini
-  const itemsPerPage = 5; // Jumlah item per halaman
+  const [perPage, setPerPage] = useState(5);
 
-  const handleClick = (song) => {
+  const handlePerPageChange = (value) => {
+    setPerPage(value);
+  };
+
+  const detailSong = (song) => {
     Swal.fire({
       title: `Nama Band: ${song.nama}`,
       html: `
@@ -41,9 +45,9 @@ function Home() {
   });
 };
 
-  const fetchSongs = async () => {
+  const fetchSongs = async (page = 1) => {
     try {
-      const response = await axios.get('http://localhost:8000/api/songs');
+      const response = await axios.get(`http://localhost:8000/api/songs?page=${page}`);
       console.log(response.data.data.data);
       setSongs(response.data.data.data);
     } catch (error) {
@@ -141,18 +145,62 @@ function Home() {
     });
   };
 
-  const handlePageClick = (selected) => {
-    setCurrentPage(selected);
-  };
-  const pageCount = Math.ceil(songs.length / itemsPerPage); 
-  const indexOfLastSong = (currentPage + 1) * itemsPerPage;
-  const indexOfFirstSong = indexOfLastSong - itemsPerPage;
-  const currentSongs = songs.slice(indexOfFirstSong, indexOfLastSong);
+  //DataTable
+  const columns = [
+    {
+      name: 'Cover',
+      selector: 'image',
+      cell: row => (
+        <img
+          src={row.image}
+          style={{ width: '120px', height: '70px' }}
+          alt={row.image}
+          className='rounded'
+        />
+      ),
+    },
+    {
+      name: 'Nama',
+      selector: 'nama',
+    },
+    {
+      name: 'Judul Lagu',
+      selector: 'judul_lagu',
+    },
+    {
+      name: 'Aksi',
+      cell: row => (
+        <>
+          <Link to={`/detail/${row.id}`} style={{ textDecoration: 'none' }}>
+            <i
+              className="bi bi-file-earmark-music"
+              data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"
+              style={{ cursor: "pointer", color: "black", marginRight: "10px", fontSize: "24px" }}
+              onClick={() => detailSong(row)}
+            ></i>
+          </Link>
+          <Link to={`/edit/${row.id}`} style={{ textDecoration: 'none' }}>
+            <i
+              className="bi bi-pencil-square"
+              style={{ cursor: "pointer", color: "blue", marginRight: "10px", fontSize: "24px" }}
+            ></i>
+          </Link>
+          <i
+            className="bi bi-trash3"
+            onClick={() => handleDeleteClick(row.id)}
+            style={{ cursor: "pointer", color: "red", marginRight: "10px", fontSize: "24px" }}
+          ></i>
+        </>
+      ),
+    }
+  ];
+
+  const data = songs || [];
 
   return (
     <div>
       {/* Navbar */}
-      <Navbar />
+      <Navbar peranPengguna="admin" />
       {/* Content */}
       <div className="container mt-5">
         <div className="row">
@@ -169,78 +217,22 @@ function Home() {
                 <div className="card-body">
                   <a href="/TambahData" className="btn btn-primary ms-auto"><i className="bi bi-plus-square"></i> Tambah daata lagu</a>
                 <div className="mt-4">
-                <Table striped bordered hover>
-                    <thead>
-                      <tr style={{ textAlign: "center" }}>
-                        <th scope="col">Cover</th>
-                        <th scope="col">Nama</th>
-                        <th scope="col">Judul Lagu</th>
-                        <th scope="col" colSpan={3}>Aksi</th>
-
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {Array.isArray(currentSongs) && currentSongs.length > 0 ? (
-                      currentSongs.map((song) => (
-                        <tr key={song.id}>
-                          <td style={{ verticalAlign: "middle", textAlign: "center" }}>
-                          <img 
-                              src={`${song.image}`}
-                              style={{ width: "120px", height: "70px" }}
-                              // alt={song.image}
-                              className='rounded' />
-                          </td>
-                          <td style={{ verticalAlign: "middle" }}>{song.nama}</td>
-                          <td style={{ verticalAlign: "middle" }}>{song.judul_lagu}</td>
-                          <td style={{ verticalAlign: "middle", textAlign:"center" }}>
-                          <Link to={`/detail/${song.id}`} style={{ textDecoration: 'none' }}>
-                            <i 
-                              className="bi bi-file-earmark-music"
-                              data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top"
-                              style={{ cursor: "pointer", color: "black", marginRight: "10px", fontSize:"24px" }}
-                              onClick={() => handleClick(song)}
-                            ></i>
-                          </Link>
-                          <Link to={`/edit/${song.id}`} style={{ textDecoration: 'none' }}>
-                          <i 
-                            className="bi bi-pencil-square" 
-                            style={{ cursor: "pointer",color:"blue", marginRight: "10px", fontSize:"24px"  }}
-                          ></i>
-                          </Link>
-                          <i 
-                          className="bi bi-trash3"
-                          onClick={() => handleDeleteClick(song.id)} 
-                          style={{ cursor: "pointer",color:"red", marginRight: "10px", fontSize:"24px"  }}
-                          ></i>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="4" className="text-center">Tidak ada data lagu..</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
-                <Pagination className="mt-4 justify-content-center">
-                    <Pagination.Prev 
-                      onClick={() => handlePageClick(currentPage - 1)} 
-                      disabled={currentPage === 0}
-                    />
-                    {Array.from({length: pageCount}, (_, index) => (
-                      <Pagination.Item 
-                        key={index} 
-                        active={index === currentPage}
-                        onClick={() => handlePageClick(index)} // Menggunakan index sebagai parameter
-                      >
-                        {index + 1}
-                      </Pagination.Item>
-                    ))}
-                    <Pagination.Next 
-                      onClick={() => handlePageClick(currentPage + 1)} 
-                      disabled={currentPage === pageCount - 1}
-                    />
-                  </Pagination>
+                  <DataTable
+                    columns={columns}
+                    data={data}
+                    pagination
+                    highlightOnHover
+                    paginationPerPage={5}
+                    paginationRowsPerPageOptions={[5,10,20]}
+                    noDataComponent={<div className="text-center">Tidak ada data lagu..</div>}
+                    customStyles={{
+                      rows: {
+                        style: {
+                          padding: '10px', // Sesuaikan dengan jarak yang diinginkan
+                        }
+                      }
+                    }}
+                  />
                 </div>
               </div>
             </div>
