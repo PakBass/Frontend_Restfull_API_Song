@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import InfoCard from "./SideBar";
 import Navbar from "./Navbar";
@@ -200,7 +200,8 @@ function EditData() {
                       )}
                     </div>
                     <button type="submit" className="btn btn-primary"><i className="bi bi-floppy"></i> Simpan</button>
-                    <a href="/home" className="btn btn-danger ms-2"><i className="bi bi-arrow-left-square"></i> Back</a>
+                    <Link to="/home" className="btn btn-danger ms-2"><i className="bi bi-arrow-left-square"></i> Back</Link>
+                    {/* <a href="/home" className="btn btn-danger ms-2"><i className="bi bi-arrow-left-square"></i> Back</a> */}
                 </form>
               </div>
             </div>

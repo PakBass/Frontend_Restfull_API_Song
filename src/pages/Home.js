@@ -215,15 +215,16 @@ function Home() {
                 <strong>Data lagu</strong>
               </div>
                 <div className="card-body">
-                  <a href="/TambahData" className="btn btn-primary ms-auto"><i className="bi bi-plus-square"></i> Tambah daata lagu</a>
+                <Link to="/TambahData" className="btn btn-primary ms-auto"><i className="bi bi-plus-square"></i> Tambah daata lagu</Link>
+                  {/* <a href="/TambahData" className="btn btn-primary ms-auto"><i className="bi bi-plus-square"></i> Tambah daata lagu</a> */}
                 <div className="mt-4">
                   <DataTable
                     columns={columns}
                     data={data}
                     pagination
                     highlightOnHover
-                    paginationPerPage={5}
-                    paginationRowsPerPageOptions={[5,10,20]}
+                    paginationPerPage={3}
+                    paginationRowsPerPageOptions={[3,5,10]}
                     noDataComponent={<div className="text-center">Tidak ada data lagu..</div>}
                     customStyles={{
                       rows: {
@@ -232,6 +233,7 @@ function Home() {
                         }
                       }
                     }}
+                    search
                   />
                 </div>
               </div>
