@@ -10,6 +10,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import InfoCard from "./SideBar";
 import Navbar from "./Navbar";
 import DataTable from 'react-data-table-component';
+import jsPDF from "jspdf";
 
 
 function Home() {
@@ -190,12 +191,28 @@ function Home() {
             onClick={() => handleDeleteClick(row.id)}
             style={{ cursor: "pointer", color: "red", marginRight: "10px", fontSize: "24px" }}
           ></i>
+          <i
+            className="bi bi-file-earmark-pdf-fill"
+            onClick={() => generatePDF(row)}
+            style={{ cursor: "pointer", color: "red", marginRight: "10px", fontSize: "24px" }}
+          ></i>
         </>
       ),
     }
   ];
 
   const data = songs || [];
+
+  //PDF
+  const generatePDF = (rowData) => {
+    const doc = new jsPDF();
+    const yPos = 20;
+    doc.text(`${rowData.nama} - ${rowData.judul_lagu}`, 10, yPos);
+
+    const imgData = rowData.image; // Pastikan rowData.image berisi URL gambar atau data gambar
+    doc.addImage(imgData, 'JPEG', 10, yPos + 10, 50, 50); // Atur posisi dan ukuran gambar
+    doc.save('data_lagu.pdf');
+  };
 
   return (
     <div>
